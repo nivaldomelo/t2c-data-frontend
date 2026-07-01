@@ -125,6 +125,8 @@ function buildProfilingStatus({ runLoading, currentRun, hasActiveRun }) {
   }
 }
 
-module.exports = {
+export {
   buildProfilingStatus,
 };
+
+export default { buildProfilingStatus };

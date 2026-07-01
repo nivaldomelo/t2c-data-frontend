@@ -43,7 +43,7 @@ function calculatePlatformHealth(summary) {
   };
 }
 
-module.exports = {
+export {
   calculatePlatformHealth,
   platformHealthStatusLabel,
   platformHealthTone,

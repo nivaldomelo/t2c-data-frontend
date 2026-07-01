@@ -481,7 +481,7 @@ function buildObservabilitySnapshot({ canonicalAsset, operationalContext, correl
   };
 }
 
-module.exports = {
+export {
   DETAIL_TABS,
   DETAIL_TAB_LABELS,
   buildExplorerDetailTabHref,

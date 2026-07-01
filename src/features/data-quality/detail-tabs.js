@@ -30,7 +30,7 @@ function buildDataQualityDetailTabHref(pathname, currentSearchParams, tab) {
   return `${pathname}${params.toString() ? `?${params.toString()}` : ""}`;
 }
 
-module.exports = {
+export {
   DETAIL_TABS,
   DETAIL_TAB_LABELS,
   DETAIL_TAB_ALIASES,

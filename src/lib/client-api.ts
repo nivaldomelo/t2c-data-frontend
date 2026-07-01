@@ -81,28 +81,78 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
   return data as T;
 }
 
+export type ExportJobStatus = Record<string, unknown> & {
+  status?: string | null;
+  artifact_public_id?: string | null;
+  artifact_filename?: string | null;
+  export_download_href?: string | null;
+};
+
+export type DownloadApiFileResult =
+  | { kind: "downloaded" }
+  | { kind: "queued"; job: Record<string, unknown> };
+
+export async function getExportJobStatus(publicId: string): Promise<ExportJobStatus> {
+  return apiRequest<ExportJobStatus>(`/v1/exports/${encodeURIComponent(publicId)}`);
+}
+
+function triggerBrowserDownload(blob: Blob, filename: string): void {
+  const objectUrl = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = objectUrl;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(objectUrl);
+}
+
 export async function downloadApiFile(
   path: string,
   filename: string,
   init: RequestInit = {},
   options: { confirmMessage?: string } = {},
-): Promise<void> {
+): Promise<DownloadApiFileResult> {
   if (options.confirmMessage && typeof window !== "undefined" && !window.confirm(options.confirmMessage)) {
-    return;
+    return { kind: "downloaded" };
   }
-  const res = await apiResponse(path, init);
-  if (!res.ok) {
-    throw new ApiError(res.status, res.statusText || `HTTP ${res.status}`);
+  const response = await apiResponse(path, init);
+  const contentType = (response.headers.get("content-type") || "").toLowerCase();
+  // Export assíncrono: 202 + JSON -> job para acompanhar; faz polling e baixa ao concluir.
+  if (response.status === 202 && contentType.includes("application/json")) {
+    const job = (await response.json()) as Record<string, unknown>;
+    const publicId = typeof job.artifact_public_id === "string" ? job.artifact_public_id : null;
+    const jobFilename =
+      typeof job.artifact_filename === "string" && job.artifact_filename.trim()
+        ? job.artifact_filename.trim()
+        : filename;
+    if (publicId) {
+      void (async () => {
+        const deadline = Date.now() + 15 * 60 * 1000;
+        while (Date.now() < deadline) {
+          try {
+            const current = await getExportJobStatus(publicId);
+            const href = typeof current.export_download_href === "string" ? current.export_download_href : null;
+            const status = typeof current.status === "string" ? current.status.toLowerCase() : "";
+            if (status === "success" && href) {
+              await downloadApiFile(href, jobFilename);
+              return;
+            }
+            if (status === "failed") return;
+          } catch {
+            /* best-effort polling */
+          }
+          await new Promise((resolve) => window.setTimeout(resolve, 3000));
+        }
+      })();
+    }
+    return { kind: "queued", job };
   }
-  const blob = await res.blob();
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
+  if (!response.ok) {
+    throw new ApiError(response.status, response.statusText || `HTTP ${response.status}`);
+  }
+  triggerBrowserDownload(await response.blob(), filename);
+  return { kind: "downloaded" };
 }
 
 function safeJson(text: string): unknown {
