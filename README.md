@@ -6,6 +6,29 @@ Frontend (SPA) da plataforma **t2c_data** — **Vite + React + TypeScript**, dep
 > Migração em andamento a partir do app Next.js do monorepo `t2c_data`. **F1 (scaffold) concluído**;
 > as telas por módulo estão sendo portadas (App Router → React Router, remoção de Next-isms).
 
+---
+
+## 🚀 Deploy (DevOps) — variáveis de build
+
+> **Leitura obrigatória antes do primeiro deploy.** Ambientes: **`develop` → dev**, **`main` → prd**
+> (não há `apc` neste projeto). Frontend **não tem banco de dados nem migrações** — é um SPA estático
+> em **S3 + CloudFront**. Toda persistência é via a API do `t2c-data-backend`.
+
+As variáveis `VITE_*` são **assadas no build** (públicas — **NUNCA** coloque segredos). Definidas por
+ambiente como **GitHub Environment vars** (`vars.VITE_*`); o pipeline gera o `.env.production` no build.
+
+| Var | Exemplo | Nota |
+|---|---|---|
+| `VITE_API_URL` | `https://api.t2c-data.<dns>/api/v1` | URL **absoluta** da API. Precisa casar com `CORS_ALLOW_ORIGINS` do backend. Auth **Bearer**. |
+| `VITE_APP_ENV` | `dev` \| `prd` | Ambiente lógico. |
+| `VITE_APP_VERSION` | (opcional) | Versão exibida na UI. |
+
+Infra que o DevOps provê: bucket `t2c-data-frontend-{env}` + distribuição CloudFront (`vars.CLOUDFRONT_ID`),
+via terraform `t2c-tf-frontend`. Deploy: `build` → `aws s3 sync --delete` → invalidação de cache (HTML/root).
+Ver [.env.example](.env.example) e a seção **Deploy** abaixo.
+
+---
+
 ## Stack
 - Vite 5, React 18, TypeScript, React Router 6
 - @tanstack/react-query, react-i18next, tailwindcss, lucide-react, reactflow
