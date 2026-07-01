@@ -116,6 +116,7 @@ const nav: NavItem[] = [
       { href: "/admin/access", labelKey: "nav.adminAccess" },
       { href: "/admin/audit", labelKey: "nav.adminUserAudit" },
       { href: "/admin/governance", labelKey: "nav.configuration" },
+      { href: "/admin/platform/config", labelKey: "nav.adminPlatformConfig" },
     ],
   },
 ];
@@ -187,6 +188,7 @@ function pageTitle(pathname: string, t: (key: string) => string): string {
   if (pathname.startsWith("/governance/dictionary")) return t("pages.dictionary.title");
   if (pathname.startsWith("/governance")) return t("nav.governanceHub");
   if (pathname.startsWith("/privacy-access")) return t("nav.privacyAccess");
+  if (pathname.startsWith("/admin/platform/config")) return t("nav.adminPlatformConfig");
   if (pathname.startsWith("/admin/governance")) return t("nav.configuration");
   if (pathname.startsWith("/admin/users")) return t("nav.adminUsers");
   if (pathname.startsWith("/admin/roles")) return t("nav.adminRoles");

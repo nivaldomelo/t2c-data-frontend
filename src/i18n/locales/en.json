@@ -55,6 +55,7 @@
     "adminPermissions": "Permissions",
     "adminAccess": "Data scopes",
     "adminUserAudit": "User audit",
+    "adminPlatformConfig": "Platform configuration",
     "adminPlatformApiKeys": "API keys",
     "configuration": "Configuration",
     "adminAliases": "Search aliases",

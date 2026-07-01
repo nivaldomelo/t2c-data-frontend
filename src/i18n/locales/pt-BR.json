@@ -59,6 +59,7 @@
     "adminPermissions": "Permissões",
     "adminAccess": "Escopos de dados",
     "adminUserAudit": "Auditoria de usuários",
+    "adminPlatformConfig": "Configuração da plataforma",
     "adminPlatformApiKeys": "API Keys",
     "configuration": "Configuração",
     "adminAliases": "Aliases da busca",
