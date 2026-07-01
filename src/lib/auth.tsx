@@ -38,6 +38,7 @@ type AuthContextValue = {
   displayName: string;
   userEmail: string | null;
   unreadNotifications: number;
+  canEdit: boolean;
   primaryRole: NormalizedRole;
   defaultRoute: string;
   canAccessPath: (pathname: string) => boolean;
@@ -55,6 +56,7 @@ const AuthContext = createContext<AuthContextValue>({
   displayName: "",
   userEmail: null,
   unreadNotifications: 0,
+  canEdit: false,
   primaryRole: "unknown",
   defaultRoute: "/login",
   canAccessPath: () => false,
@@ -179,6 +181,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       displayName,
       userEmail,
       unreadNotifications,
+      canEdit: canRoleAction(roles, "write", "explorer", permissions),
       primaryRole: getPrimaryRole(roles, permissions),
       defaultRoute: defaultRouteForRoles(roles, permissions),
       canAccessPath: (targetPath: string) => canAccessPath(targetPath, roles, permissions),

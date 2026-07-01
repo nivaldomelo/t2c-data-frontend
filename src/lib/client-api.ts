@@ -81,6 +81,30 @@ export async function apiRequest<T>(path: string, init: RequestInit = {}): Promi
   return data as T;
 }
 
+export async function downloadApiFile(
+  path: string,
+  filename: string,
+  init: RequestInit = {},
+  options: { confirmMessage?: string } = {},
+): Promise<void> {
+  if (options.confirmMessage && typeof window !== "undefined" && !window.confirm(options.confirmMessage)) {
+    return;
+  }
+  const res = await apiResponse(path, init);
+  if (!res.ok) {
+    throw new ApiError(res.status, res.statusText || `HTTP ${res.status}`);
+  }
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
 function safeJson(text: string): unknown {
   try {
     return JSON.parse(text);
