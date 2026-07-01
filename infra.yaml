@@ -1,0 +1,16 @@
+application:
+  name: t2c-data-frontend
+  language:
+    name: node
+    version: v20
+  pipeline: frontend-spa-cdn
+aws:
+  s3:
+    bucket:
+      - name: t2c-data-frontend      # bucket real terá sufixo -dev/-prd/-apc
+        self_hosted: true
+  cloudfront:
+    distribution:
+      - subdomain: t2c-data              # -> t2c-data.{dns_domain}
+        backend_subdomain: t2c-data-backend  # API em t2c-data-backend.{dns_domain}
+        s3_bucket: true

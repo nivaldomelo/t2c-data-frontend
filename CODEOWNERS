@@ -1,0 +1,5 @@
+# DevOps possui APENAS os arquivos de infra (frontend SPA não tem Dockerfile/.helm).
+.github/workflows/cicd.yaml    @turn2c/squad-sre-devops
+infra.yaml                     @turn2c/squad-sre-devops
+
+# TODO: owner do código de aplicação (src/, package.json, vite.config.ts) — squad dono do t2c_data.

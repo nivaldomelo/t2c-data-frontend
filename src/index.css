@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --app-bg: 244 247 250;
+  --app-bg-subtle: 236 242 247;
+  --app-bg-elevated: 255 255 255;
+  --app-bg-glass: 255 255 255;
+  --surface: 255 255 255;
+  --surface-strong: 248 250 252;
+  --border: 223 231 240;
+  --border-strong: 196 210 223;
+
+  --text: 15 23 42;
+  --text-body: 30 41 59;
+  --text-muted: 100 116 139;
+
+  --accent-50: 235 248 255;
+  --accent-100: 212 238 255;
+  --accent-200: 174 224 255;
+  --accent-500: 20 184 166;
+  --accent-600: 13 148 136;
+  --accent-700: 15 118 110;
+
+  --brand-50: 240 249 255;
+  --brand-100: 224 242 254;
+  --brand-200: 191 219 254;
+  --brand-500: 30 64 175;
+  --brand-600: 37 99 235;
+  --brand-700: 29 78 216;
+
+  --success-50: 236 253 245;
+  --success-100: 209 250 229;
+  --success-200: 167 243 208;
+  --success-500: 16 185 129;
+  --success-600: 5 150 105;
+  --success-700: 4 120 87;
+
+  --warning-50: 255 251 235;
+  --warning-100: 254 243 199;
+  --warning-200: 253 230 138;
+  --warning-500: 245 158 11;
+  --warning-600: 217 119 6;
+  --warning-700: 180 83 9;
+
+  --danger-50: 254 242 242;
+  --danger-100: 254 226 226;
+  --danger-200: 254 202 202;
+  --danger-500: 239 68 68;
+  --danger-600: 220 38 38;
+  --danger-700: 185 28 28;
+
+  --info-50: 236 254 255;
+  --info-100: 207 250 254;
+  --info-200: 165 243 252;
+  --info-500: 14 165 233;
+  --info-600: 8 145 178;
+  --info-700: 14 116 144;
+}
+
+html {
+  scrollbar-gutter: stable both-edges;
+  background:
+    radial-gradient(circle at top left, rgb(var(--accent-500) / var(--glow-accent, 0.14)), transparent 28%),
+    radial-gradient(circle at top right, rgb(var(--brand-500) / var(--glow-brand, 0.12)), transparent 24%),
+    linear-gradient(180deg, rgb(var(--app-bg)) 0%, rgb(var(--app-bg-subtle)) 100%);
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgb(var(--accent-500) / calc(var(--glow-accent, 0.14) * 0.45)), transparent 22%),
+    radial-gradient(circle at top right, rgb(var(--brand-600) / calc(var(--glow-brand, 0.12) * 0.5)), transparent 24%),
+    linear-gradient(180deg, rgb(var(--app-bg)) 0%, rgb(var(--app-bg-subtle)) 100%);
+  color: rgb(var(--text));
+  font-feature-settings: "ss01", "cv11", "tnum";
+  @apply antialiased;
+}
+
+a {
+  color: rgb(var(--accent-600));
+}
+
+a:hover {
+  color: rgb(var(--accent-700));
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--accent-500));
+  outline-offset: 2px;
+}
+
+* {
+  border-color: rgb(var(--border));
+}
+
+table {
+  font-variant-numeric: tabular-nums;
+}
+
+::placeholder {
+  color: rgb(var(--text-muted));
+}
+
+::selection {
+  background: rgb(var(--accent-200));
+  color: rgb(var(--text));
+}
+
+/* ============================================================
+   Themes (turn2c data suite). Default :root = "atual".
+   Selected via <html data-theme="...">. Overriding the design
+   tokens recolors the whole system cohesively.
+   ============================================================ */
+
+/* Teal turn2c em destaque — teal como marca, azul de apoio. */
+[data-theme="teal"] {
+  --glow-accent: 0.10;
+  --glow-brand: 0.16;
+  --app-bg: 247 250 250;
+  --app-bg-subtle: 238 246 245;
+  --surface-strong: 247 251 250;
+  --brand-50: 240 253 250;
+  --brand-100: 204 251 241;
+  --brand-200: 153 246 228;
+  --brand-500: 20 184 166;
+  --brand-600: 13 148 136;
+  --brand-700: 15 118 110;
+  --accent-50: 239 246 255;
+  --accent-100: 219 234 254;
+  --accent-200: 191 219 254;
+  --accent-500: 59 130 246;
+  --accent-600: 37 99 235;
+  --accent-700: 29 78 216;
+}
+
+/* Azul corporativo + teal sutil. */
+[data-theme="corporate"] {
+  --glow-accent: 0.06;
+  --glow-brand: 0.14;
+  --brand-50: 239 246 255;
+  --brand-100: 219 234 254;
+  --brand-200: 191 219 254;
+  --brand-500: 37 99 235;
+  --brand-600: 29 78 216;
+  --brand-700: 30 58 138;
+  --accent-50: 240 253 250;
+  --accent-100: 204 251 241;
+  --accent-200: 153 246 228;
+  --accent-500: 20 184 166;
+  --accent-600: 13 148 136;
+  --accent-700: 15 118 110;
+}
+
+/* Neutro + 1 acento (teal) — o extremo "bem leve". */
+[data-theme="minimal"] {
+  --glow-accent: 0.05;
+  --glow-brand: 0.04;
+  --app-bg: 250 250 251;
+  --app-bg-subtle: 244 245 247;
+  --app-bg-elevated: 255 255 255;
+  --surface: 255 255 255;
+  --surface-strong: 249 250 251;
+  --border: 230 232 236;
+  --border-strong: 212 216 222;
+  --brand-50: 240 253 250;
+  --brand-100: 204 251 241;
+  --brand-200: 153 246 228;
+  --brand-500: 13 148 136;
+  --brand-600: 15 118 110;
+  --brand-700: 17 94 89;
+  --accent-50: 240 253 250;
+  --accent-100: 204 251 241;
+  --accent-200: 153 246 228;
+  --accent-500: 20 184 166;
+  --accent-600: 13 148 136;
+  --accent-700: 15 118 110;
+}

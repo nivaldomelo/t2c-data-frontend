@@ -1,0 +1,124 @@
+# Turn2C frontend SPA (Vite) — deploy S3 + CloudFront (frontend-spa-cdn).
+# NOTE (DevOps, dono deste arquivo): reconciliar com t2c-dbguard-frontend (sem anti-padrões:
+# type-check sem continue-on-error, `aws s3 sync --delete`, invalidação restrita).
+name: T2C Data Frontend CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop, apice]   # main→prd, develop→dev, apice→apc
+  workflow_dispatch:
+
+env:
+  BRANCH: ${{ github.ref_name }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  init:
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.set_env.outputs.environment }}
+      app_name: ${{ steps.app.outputs.app_name }}
+      s3_bucket: ${{ steps.app.outputs.s3_bucket }}
+      cloudfront_subdomain: ${{ steps.app.outputs.cloudfront_subdomain }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: app
+        run: |
+          echo "app_name=$(grep -E '^\s+name:' infra.yaml | head -1 | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+          echo "s3_bucket=$(grep -E '^\s+- name:' infra.yaml | head -1 | awk '{print $3}')" >> "$GITHUB_OUTPUT"
+          echo "cloudfront_subdomain=$(grep -E '^\s+- subdomain:' infra.yaml | head -1 | awk '{print $3}')" >> "$GITHUB_OUTPUT"
+      - id: set_env
+        run: |
+          if [ "$BRANCH" = "main" ]; then echo "environment=prd" >> "$GITHUB_OUTPUT";
+          elif [ "$BRANCH" = "develop" ]; then echo "environment=dev" >> "$GITHUB_OUTPUT";
+          elif [ "$BRANCH" = "apice" ]; then echo "environment=apc" >> "$GITHUB_OUTPUT"; fi
+
+  build:
+    needs: init
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'prd' || github.ref_name == 'apice' && 'apc' || 'dev' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - name: .env.production a partir de vars.VITE_*
+        run: |
+          echo "VITE_API_URL=${{ vars.VITE_API_URL }}" >> .env.production
+          echo "VITE_APP_ENV=${{ needs.init.outputs.environment }}" >> .env.production
+      - run: npx tsc -b        # type-check (sem continue-on-error)
+      - run: npx vite build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
+
+  s3Deploy:
+    needs: [init, build]
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'prd' || github.ref_name == 'apice' && 'apc' || 'dev' }}
+    steps:
+      - id: aws
+        name: set-aws-creds (ladder)
+        run: |
+          if [ "$BRANCH" = "main" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.PRD_AWS_ACCESS_KEY_JENKINS }}" >> "$GITHUB_ENV"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.PRD_AWS_SECRET_ACCESS_KEY }}" >> "$GITHUB_ENV"
+          elif [ "$BRANCH" = "develop" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.DEV_AWS_ACCESS_KEY_JENKINS }}" >> "$GITHUB_ENV"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}" >> "$GITHUB_ENV"
+          elif [ "$BRANCH" = "apice" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.APC_AWS_ACCESS_KEY_JENKINS }}" >> "$GITHUB_ENV"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.APC_AWS_SECRET_ACCESS_KEY }}" >> "$GITHUB_ENV"
+          fi
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist
+      - name: Sync S3 (assets imutáveis + index sem cache)
+        env:
+          BUCKET: ${{ needs.init.outputs.s3_bucket }}-${{ needs.init.outputs.environment }}
+        run: |
+          aws s3 sync dist "s3://$BUCKET" --delete \
+            --exclude index.html --cache-control "public,max-age=31536000,immutable"
+          aws s3 cp dist/index.html "s3://$BUCKET/index.html" \
+            --cache-control "no-cache,no-store,must-revalidate"
+
+  invalidateCache:
+    needs: [init, s3Deploy]
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref_name == 'main' && 'prd' || github.ref_name == 'apice' && 'apc' || 'dev' }}
+    steps:
+      - id: aws
+        name: set-aws-creds (ladder)
+        run: |
+          if [ "$BRANCH" = "main" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.PRD_AWS_ACCESS_KEY_JENKINS }}" >> "$GITHUB_ENV"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.PRD_AWS_SECRET_ACCESS_KEY }}" >> "$GITHUB_ENV"
+          elif [ "$BRANCH" = "develop" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.DEV_AWS_ACCESS_KEY_JENKINS }}" >> "$GITHUB_ENV"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.DEV_AWS_SECRET_ACCESS_KEY }}" >> "$GITHUB_ENV"
+          elif [ "$BRANCH" = "apice" ]; then
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.APC_AWS_ACCESS_KEY_JENKINS }}" >> "$GITHUB_ENV"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.APC_AWS_SECRET_ACCESS_KEY }}" >> "$GITHUB_ENV"
+          fi
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ env.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ env.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+      - name: Invalidação restrita (HTML/root)
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id "${{ vars.CLOUDFRONT_ID }}" \
+            --paths "/index.html" "/"

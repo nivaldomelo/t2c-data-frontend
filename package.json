@@ -1,0 +1,39 @@
+{
+  "name": "t2c-data-frontend",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --noEmit",
+    "lint": "tsc -b --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.101.2",
+    "dagre": "^0.8.5",
+    "i18next": "^25.8.13",
+    "lucide-react": "^0.575.0",
+    "qrcode.react": "^4.2.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-i18next": "^16.5.4",
+    "react-router-dom": "^6.28.0",
+    "reactflow": "^11.11.4"
+  },
+  "devDependencies": {
+    "@types/dagre": "^0.7.54",
+    "@types/node": "20.14.10",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "10.4.19",
+    "postcss": "8.4.39",
+    "tailwindcss": "3.4.7",
+    "typescript": "5.5.3",
+    "vite": "^5.4.11",
+    "vitest": "^2.1.9"
+  }
+}
