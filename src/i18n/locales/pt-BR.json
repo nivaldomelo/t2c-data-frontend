@@ -1,0 +1,206 @@
+{
+  "common": {
+    "search": "Busca",
+    "languageChanged": "Idioma alterado",
+    "searchCatalog": "Buscar no catálogo...",
+    "user": "Usuário",
+    "profile": "Perfil",
+    "inbox": "Inbox",
+    "logout": "Sair",
+    "revalidate": "Revalidar",
+    "generate": "Gerar",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "loading": "Carregando..."
+  },
+  "language": {
+    "label": "Idioma",
+    "pt-BR": "Português (Brasil)",
+    "en": "English",
+    "es": "Español"
+  },
+  "nav": {
+    "home": "Resumo",
+    "explorer": "Explorer",
+    "dataJourney": "Jornada de Dados",
+    "datasources": "Fontes de dados",
+    "governanceHub": "Governança",
+    "intelligenceHub": "Central de Decisão",
+    "semanticDomains": "Domínios",
+    "semanticProducts": "Data Products",
+    "classificationReview": "Revisão de classificação",
+    "governanceTimeline": "Timeline",
+    "stewardship": "Fluxo de stewardship",
+    "collaboration": "Colaboração",
+    "pendingCenter": "Pendências",
+    "tags": "Tags",
+    "glossary": "Glossário",
+    "classifications": "Tags",
+    "terms": "Termos",
+    "dictionary": "Dicionário de dados",
+    "certification": "Certificação",
+    "privacyAccess": "Privacidade",
+    "dataOwners": "Owners",
+    "lineage": "Linhagem",
+    "dataQuality": "Data Quality",
+    "dataQualityOverview": "Visão geral",
+    "dataQualityObservability": "Observabilidade",
+    "dataQualityRules": "Regras de DQ",
+    "dataQualityProfiling": "Execuções de Profiling",
+    "incidents": "Incidentes",
+    "incidentsTickets": "Incidentes e chamados",
+    "incidentTickets": "Chamados",
+    "audit": "Auditoria",
+    "dailyUse": "Uso diário",
+    "datalakes": "Datalakes",
+    "admin": "Admin",
+    "adminUsers": "Usuários",
+    "adminRoles": "Roles",
+    "adminPermissions": "Permissões",
+    "adminAccess": "Escopos de dados",
+    "adminUserAudit": "Auditoria de usuários",
+    "adminPlatformApiKeys": "API Keys",
+    "configuration": "Configuração",
+    "adminAliases": "Aliases da busca",
+    "opsCockpit": "Ops Cockpit",
+    "operationsHub": "Operações",
+    "opsIngestion": "Ingestion",
+    "opsAutomations": "Automações",
+    "integrations": "Integrações",
+    "integrationsApi": "API",
+    "integrationsDataLake": "Data Lake",
+    "integrationsAirflow": "Apache Airflow",
+    "integrationsMetabase": "Metabase",
+    "dashboard": "Dashboard",
+    "inbox": "Inbox",
+    "sections": {
+      "core": "Produto",
+      "daily": "Uso diário",
+      "quality": "Qualidade",
+      "governance": "Governança",
+      "operations": "Operações",
+      "integrations": "Integrações",
+      "account": "Conta",
+      "admin": "Administração"
+    }
+  },
+  "pages": {
+    "home": {
+      "title": "Resumo do Catálogo"
+    },
+    "explorer": {
+      "title": "Explorer do catálogo"
+    },
+    "dataJourney": {
+      "title": "Jornada de Dados"
+    },
+    "datasources": {
+      "title": "Fontes de dados"
+    },
+    "tags": {
+      "title": "Tags"
+    },
+    "glossary": {
+      "title": "Glossário"
+    },
+    "dataOwners": {
+      "title": "Responsáveis de dados"
+    },
+    "certification": {
+      "title": "Certificação"
+    },
+    "privacyAccess": {
+      "title": "Privacidade & Acesso"
+    },
+    "governance": {
+      "title": "Central de governança"
+    },
+    "intelligenceHub": {
+      "title": "Central de Decisão de Governança"
+    },
+    "semanticDomains": {
+      "title": "Domínios de dados"
+    },
+    "semanticProducts": {
+      "title": "Produtos de dados"
+    },
+    "classificationReview": {
+      "title": "Revisão de classificação"
+    },
+    "governanceTimeline": {
+      "title": "Timeline de ativo e governança"
+    },
+    "dictionary": {
+      "title": "Dicionário de dados"
+    },
+    "governanceStewardship": {
+      "title": "Fluxo de stewardship"
+    },
+    "governanceCollaboration": {
+      "title": "Governança colaborativa"
+    },
+    "governancePending": {
+      "title": "Central de pendências"
+    },
+    "incidents": {
+      "title": "Incidentes"
+    },
+    "admin": {
+      "title": "Administrador"
+    },
+    "adminAccess": {
+      "title": "Escopos de dados"
+    },
+    "dataQuality": {
+      "title": "Qualidade de dados"
+    },
+    "dataQualityObservability": {
+      "title": "Observabilidade"
+    },
+    "dashboard": {
+      "title": "Painel executivo"
+    },
+    "opsAutomations": {
+      "title": "Automações"
+    },
+    "inbox": {
+      "title": "Inbox"
+    },
+    "integrations": {
+      "title": "Integrações"
+    },
+    "integrationsApi": {
+      "title": "Chaves de API"
+    },
+    "integrationsDataLake": {
+      "title": "Data Lake"
+    },
+    "integrationsAirflow": {
+      "title": "Diagnóstico técnico do Airflow"
+    },
+    "integrationsMetabase": {
+      "title": "Metabase"
+    },
+    "dashboardCampaigns": {
+      "title": "Campanha de governança"
+    },
+    "dashboardStrategy": {
+      "title": "Relatório estratégico"
+    },
+    "search": {
+      "title": "Busca global"
+    },
+    "datalakes": {
+      "title": "Datalakes"
+    },
+    "searchAliases": {
+      "title": "Gestão de aliases da busca"
+    },
+    "scanRuns": {
+      "title": "Execuções de varredura"
+    },
+    "tableDetail": {
+      "title": "Detalhes do ativo"
+    }
+  }
+}

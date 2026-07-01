@@ -1,32 +1,34 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
-// Scaffold F1 — estrutura mínima buildável. As rotas/telas reais serão portadas do
-// app Next.js nos incrementos seguintes (F2+): client-api (VITE_API_URL + Bearer),
-// guard de rota client-side, layout/app-shell e features por módulo.
+import { AppShell } from "@/components/app-shell";
+import { ProtectedRoute } from "@/components/protected-route";
+import { AuthProvider } from "@/lib/auth";
+import { HomePage } from "@/pages/home";
+import { LoginPage } from "@/pages/login";
 
-function Placeholder() {
-  return (
-    <main style={{ display: "grid", placeItems: "center", minHeight: "100dvh" }}>
-      <div style={{ textAlign: "center", maxWidth: 560, padding: 24 }}>
-        <p style={{ letterSpacing: "0.18em", textTransform: "uppercase", color: "#0f766e", fontWeight: 700 }}>
-          t2c_data
-        </p>
-        <h1 style={{ fontSize: 28, margin: "8px 0" }}>Frontend (Vite SPA) — scaffold</h1>
-        <p style={{ color: "#475569" }}>
-          Base Vite + React Router pronta. Migração das telas do Next.js em andamento.
-        </p>
-        <p style={{ color: "#94a3b8", marginTop: 16, fontSize: 13 }}>
-          API: {import.meta.env.VITE_API_URL || "(defina VITE_API_URL)"}
-        </p>
-      </div>
-    </main>
-  );
-}
-
+// F2 — núcleo: auth + RBAC + shell. Rotas por módulo (Explorer, DQ, Governança, Centro de
+// Decisão, etc.) são adicionadas em F3+ substituindo os placeholders abaixo.
 export function App() {
   return (
-    <Routes>
-      <Route path="*" element={<Placeholder />} />
-    </Routes>
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          element={
+            <ProtectedRoute>
+              <AppShell />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="/dashboard" replace />} />
+          <Route path="/dashboard" element={<HomePage />} />
+          <Route path="/explorer" element={<HomePage />} />
+          <Route path="/lineage" element={<HomePage />} />
+          <Route path="/governance" element={<HomePage />} />
+          <Route path="/governance/intelligence" element={<HomePage />} />
+          <Route path="*" element={<HomePage />} />
+        </Route>
+      </Routes>
+    </AuthProvider>
   );
 }
