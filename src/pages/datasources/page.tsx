@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { safeHref } from "@/lib/safe-href";
 import { Loader2, Pencil, Plus, Trash2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -135,7 +136,8 @@ function scanRunSparkDriverId(run: ScanRun | ScanRunDetail): string | null {
 
 function scanRunLogsUrl(run: ScanRunDetail | null | undefined): string | null {
   if (!run) return null;
-  return run.spark_logs_url || `/api/v1/scan-runs/${run.id}/logs`;
+  // spark_logs_url vem da API → sanitiza (bloqueia javascript:/open-redirect).
+  return safeHref(run.spark_logs_url || `/api/v1/scan-runs/${run.id}/logs`);
 }
 
 function scanRunDiscoverySummary(run: ScanRun | ScanRunDetail): string | null {
