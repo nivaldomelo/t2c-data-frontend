@@ -15,3 +15,11 @@ export function safeHref(value: string | null | undefined, fallback = "#"): stri
   }
   return fallback;
 }
+
+// Variante ESTRITA para navegação same-tab/interna (window.location.assign): aceita apenas
+// caminho relativo mesma-origem; rejeita URLs absolutas http(s) (evita open-redirect/phishing).
+export function safeInternalHref(value: string | null | undefined, fallback = "/"): string {
+  const raw = (value ?? "").trim();
+  if (raw.startsWith("/") && !raw.startsWith("//") && !raw.startsWith("/\\")) return raw;
+  return fallback;
+}
