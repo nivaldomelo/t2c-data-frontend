@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import { Database, Mail, ShieldCheck, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -64,7 +65,9 @@ export function AboutDialog({ open, onClose }: { open: boolean; onClose: () => v
 
   const environment = envLabel(RAW_ENV);
 
-  return (
+  // Portal no body: evita que o backdrop-filter/transform do header vire containing block
+  // do position:fixed (o que cortava o modal). No body, o overlay cobre a viewport e centraliza.
+  return createPortal(
     <div className="fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-md">
       <button aria-label="Fechar" className="absolute inset-0 cursor-default" onClick={onClose} type="button" />
       <div
@@ -160,6 +163,7 @@ export function AboutDialog({ open, onClose }: { open: boolean; onClose: () => v
           <Button onClick={onClose}>Fechar</Button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
