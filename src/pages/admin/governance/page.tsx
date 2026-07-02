@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { safeHref } from "@/lib/safe-href";
 import { BookMarked, Database, Eye, Sparkles, SlidersHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -1183,7 +1184,7 @@ export default function AdminGovernancePage() {
                               {auditExportJob.artifact_expires_at ? ` · expira em ${new Date(auditExportJob.artifact_expires_at).toLocaleString("pt-BR")}` : ""}
                             </p>
                             {auditExportJob.export_download_available && auditExportJob.export_download_href ? (
-                              <a className="mt-2 inline-flex font-medium text-info-700 underline" href={auditExportJob.export_download_href}>
+                              <a className="mt-2 inline-flex font-medium text-info-700 underline" href={safeHref(auditExportJob.export_download_href)}>
                                 Baixar arquivo agora
                               </a>
                             ) : null}

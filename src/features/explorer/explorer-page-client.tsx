@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
+import { safeHref } from "@/lib/safe-href";
 import { dynamic } from "@/lib/next-shims";
 import { usePathname, useRouter, useSearchParams } from "@/lib/next-shims";
 import { useTranslation } from "react-i18next";
@@ -887,7 +888,7 @@ export default function ExplorerPage() {
                             if (!targetTableId || targetTableId === selectedTableId) return;
                             window.location.assign(`/explorer?tableId=${targetTableId}&tab=lineage`);
                           }}
-                          onOpenRelatedAsset={(href) => window.location.assign(href)}
+                          onOpenRelatedAsset={(href) => window.location.assign(safeHref(href))}
                           onRefreshAutomaticLineage={() => void refreshAutomaticLineage()}
                           onLoadFullGraph={loadFullLineageGraph}
                         />

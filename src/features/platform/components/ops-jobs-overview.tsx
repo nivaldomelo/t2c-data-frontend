@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { safeHref } from "@/lib/safe-href";
 import { Clock3, Database, History, RefreshCw, Workflow } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -283,7 +284,7 @@ function JobSummaryCard({ job }: { job: PlatformIntegrationSyncJob }) {
       {(job.diagnostic_runbook_url || job.diagnostic_correlation_id) ? (
         <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted">
           {job.diagnostic_runbook_url ? (
-            <a className="font-medium text-primary hover:underline" href={job.diagnostic_runbook_url} target="_blank" rel="noreferrer">
+            <a className="font-medium text-primary hover:underline" href={safeHref(job.diagnostic_runbook_url)} target="_blank" rel="noreferrer">
               Abrir runbook
             </a>
           ) : null}

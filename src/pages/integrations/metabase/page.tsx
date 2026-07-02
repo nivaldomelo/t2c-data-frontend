@@ -1,4 +1,5 @@
 import { Link } from "@/lib/next-shims";
+import { safeHref } from "@/lib/safe-href";
 import { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 
@@ -726,7 +727,7 @@ export default function MetabaseIntegrationPage() {
               <div className="flex items-center justify-start gap-2 md:justify-end">
                 {summary.instance_base_url ? (
                   <Button asChild size="sm" variant="outline">
-                    <a href={summary.instance_base_url} rel="noreferrer" target="_blank">
+                    <a href={safeHref(summary.instance_base_url)} rel="noreferrer" target="_blank">
                       <ExternalLink className="mr-2 h-4 w-4" />
                       Abrir Metabase
                     </a>
@@ -1051,13 +1052,13 @@ export default function MetabaseIntegrationPage() {
                           </Button>
                         ) : isExternalHref(action.primary.href) ? (
                           <Button asChild size="sm" variant="outline">
-                            <a href={action.primary.href} rel="noreferrer" target="_blank">
+                            <a href={safeHref(action.primary.href)} rel="noreferrer" target="_blank">
                               {action.primary.label}
                             </a>
                           </Button>
                         ) : (
                           <Button asChild size="sm" variant="outline">
-                            <Link href={action.primary.href}>{action.primary.label}</Link>
+                            <Link href={safeHref(action.primary.href)}>{action.primary.label}</Link>
                           </Button>
                         )}
                         {action.secondary ? (
@@ -1067,13 +1068,13 @@ export default function MetabaseIntegrationPage() {
                             </Button>
                           ) : isExternalHref(action.secondary.href) ? (
                             <Button asChild size="sm" variant="ghost">
-                              <a href={action.secondary.href} rel="noreferrer" target="_blank">
+                              <a href={safeHref(action.secondary.href)} rel="noreferrer" target="_blank">
                                 {action.secondary.label}
                               </a>
                             </Button>
                           ) : (
                             <Button asChild size="sm" variant="ghost">
-                              <Link href={action.secondary.href}>{action.secondary.label}</Link>
+                              <Link href={safeHref(action.secondary.href)}>{action.secondary.label}</Link>
                             </Button>
                           )
                         ) : null}
