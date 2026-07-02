@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { safeHref } from "@/lib/safe-href";
 import { AlertTriangle, ArrowRight, BookOpenCheck, CalendarDays, ClipboardList, Clock3, Database, Download, FileText, Flag, ShieldCheck, Sparkles, Tags, Target, TrendingUp, Users } from "lucide-react";
 
 import { Banner } from "@/components/ui/banner";
@@ -475,7 +476,7 @@ export function CertificationView({
                       <p className="mt-3 text-sm font-semibold text-text">{blocker.label}</p>
                       <p className="mt-1 text-xs leading-5 text-text-body">{blocker.description}</p>
                       <Button asChild className="mt-3 w-full justify-between" size="sm" variant="outline">
-                        <a href={blocker.href}>
+                        <a href={safeHref(blocker.href)}>
                           {blocker.action}
                           <ArrowRight className="h-4 w-4" />
                         </a>
@@ -802,7 +803,7 @@ export function CertificationView({
                     </p>
                     <div className="mt-3 flex flex-wrap gap-2">
                       <Button asChild size="sm" variant="outline">
-                        <a href={blocker.href}>Abrir módulo</a>
+                        <a href={safeHref(blocker.href)}>Abrir módulo</a>
                       </Button>
                       {canExport ? (
                         <Button onClick={onExportCurrentFilters} size="sm" variant="ghost">

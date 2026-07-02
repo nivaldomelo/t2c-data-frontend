@@ -1,4 +1,5 @@
 import { Link } from "@/lib/next-shims";
+import { safeHref } from "@/lib/safe-href";
 import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "@/lib/next-shims";
 import {
@@ -744,7 +745,7 @@ export default function DataOwnersPage() {
           <div className="text-xs text-muted lg:text-right">
             Exportação {ownershipExportJob.status}.{" "}
             {ownershipExportJob.export_download_available && ownershipExportJob.export_download_href ? (
-              <a className="font-medium text-info-700 underline" href={ownershipExportJob.export_download_href}>
+              <a className="font-medium text-info-700 underline" href={safeHref(ownershipExportJob.export_download_href)}>
                 baixar arquivo
               </a>
             ) : (

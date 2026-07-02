@@ -12,6 +12,7 @@ import {
   ChevronDown,
   ChevronRight,
   Eye,
+  Info,
   Menu,
   LogOut,
   Radar,
@@ -23,6 +24,7 @@ import {
   Search,
 } from "lucide-react";
 
+import { AboutDialog } from "@/components/ui/about-dialog";
 import { Button } from "@/components/ui/button";
 import { recordUserAuditHeartbeat, recordUserAuditPageView } from "@/features/user-audit/api";
 import { useAuth } from "@/lib/auth";
@@ -298,6 +300,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [operationsExpanded, setOperationsExpanded] = useState(false);
   const [integrationsExpanded, setIntegrationsExpanded] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [aboutOpen, setAboutOpen] = useState(false);
   const [inboxUnread, setInboxUnread] = useState(0);
   const [mfaWarning, setMfaWarning] = useState<string | null>(null);
   const [passwordWarning, setPasswordWarning] = useState<string | null>(null);
@@ -979,6 +982,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                           className="flex w-full items-center rounded-xl px-3 py-2 text-sm text-text-body transition hover:bg-bg-subtle hover:text-text"
                           onClick={() => {
                             setUserMenuOpen(false);
+                            setAboutOpen(true);
+                          }}
+                          type="button"
+                        >
+                          <Info className="mr-2 h-4 w-4" />
+                          Sobre o t2c_data
+                        </button>
+                        <button
+                          className="flex w-full items-center rounded-xl px-3 py-2 text-sm text-text-body transition hover:bg-bg-subtle hover:text-text"
+                          onClick={() => {
+                            setUserMenuOpen(false);
                             onLogout();
                           }}
                           type="button"
@@ -990,6 +1004,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     </div>
                   ) : null}
                 </div>
+                <AboutDialog open={aboutOpen} onClose={() => setAboutOpen(false)} />
               </div>
             </div>
 

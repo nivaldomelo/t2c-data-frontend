@@ -52,10 +52,14 @@ export const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
 export async function apiResponse(path: string, init: RequestInit = {}): Promise<Response> {
   const headers = new Headers(init.headers);
   if (init.body && !headers.has("Content-Type")) headers.set("Content-Type", "application/json");
+  const url = resolveUrl(path);
   const token = getToken();
-  if (token) headers.set("Authorization", `Bearer ${token}`);
+  // Só anexa o Bearer quando o alvo é a própria API (evita vazar o token para uma URL
+  // absoluta cross-origin — ex.: export_download_href / presigned S3 devolvido pelo backend).
+  const sameApiOrigin = url.startsWith(apiBase()) || (!!API_URL && url.startsWith(API_URL));
+  if (token && sameApiOrigin) headers.set("Authorization", `Bearer ${token}`);
 
-  const res = await fetch(resolveUrl(path), { ...init, headers });
+  const res = await fetch(url, { ...init, headers });
   if (res.status === 401) {
     setToken(null);
     if (typeof window !== "undefined") {

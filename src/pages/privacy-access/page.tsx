@@ -1,4 +1,5 @@
 import { Link } from "@/lib/next-shims";
+import { safeHref } from "@/lib/safe-href";
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "@/lib/next-shims";
 import {
@@ -934,7 +935,7 @@ export default function PrivacyAccessPage() {
               <p className="mt-2 text-xs text-muted">
                 Exportação {exportJob.status}.{" "}
                 {exportJob.export_download_available && exportJob.export_download_href ? (
-                  <a className="font-medium text-info-700 underline" href={exportJob.export_download_href}>
+                  <a className="font-medium text-info-700 underline" href={safeHref(exportJob.export_download_href)}>
                     baixar arquivo
                   </a>
                 ) : (

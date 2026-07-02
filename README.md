@@ -63,6 +63,26 @@ Pipeline `.github/workflows/cicd.yaml` (`frontend-spa-cdn`): `build` (gera `.env
 separados p/ `index.html`) → `invalidateCache` (`vars.CLOUDFRONT_ID`, apenas HTML/root).
 Bucket/CloudFront provisionados via terraform `t2c-tf-frontend` (DevOps).
 
+## Segurança (frontend)
+- **CSP**: o `index.html` já traz um baseline não-quebrável (`object-src 'none'`, `base-uri 'self'`,
+  `frame-ancestors 'none'`). A **CSP completa** deve ser aplicada como header no **CloudFront** (Response
+  Headers Policy), travando `script-src`/`connect-src` no domínio da API. Exemplo:
+  ```
+  default-src 'self';
+  script-src 'self';
+  style-src 'self' 'unsafe-inline';
+  img-src 'self' data:;
+  font-src 'self' data:;
+  connect-src 'self' https://api.t2c-data.<dns>;   # domínio real da API
+  object-src 'none'; base-uri 'self'; frame-ancestors 'none';
+  ```
+  (Se o build usar o polyfill de modulepreload do Vite, adicione o hash do script inline ou um nonce.)
+- **Token**: hoje o JWT fica em `localStorage` (auth **Bearer**, sem cookies cross-site). Mitigação
+  primária = CSP acima (bloqueia exfiltração via XSS). Evolução recomendada: mover a sessão para cookie
+  `HttpOnly; Secure; SameSite` emitido pelo backend.
+- **Links dinâmicos**: URLs vindas da API passam por `safeHref()` (`src/lib/safe-href.ts`) antes de ir
+  para `<a href>`/`window.location` — bloqueia `javascript:`/open-redirect.
+
 ## Testes
 ```bash
 npm run typecheck   # tsc -b

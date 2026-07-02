@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { safeInternalHref } from "@/lib/safe-href";
 import { AlertTriangle, ArrowUpRight, Clock3, FileSearch, Flame, Star } from "lucide-react";
 
 import { Card, CardHeader } from "@/components/ui/card";
@@ -83,7 +84,7 @@ export function ExplorerSearchPanel({
         }),
       }).catch(() => undefined);
     }
-    window.location.assign(item.target_url || "/search");
+    window.location.assign(safeInternalHref(item.target_url, "/search"));
   }
 
   const collectionGroups = [

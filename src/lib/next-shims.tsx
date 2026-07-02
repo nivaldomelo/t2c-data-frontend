@@ -10,13 +10,18 @@ import {
   useSearchParams as useRRSearchParams,
 } from "react-router-dom";
 
+import { safeHref } from "@/lib/safe-href";
+
 type AnyProps = Record<string, unknown>;
 
 export const Link = forwardRef<HTMLAnchorElement, { href: string } & AnyProps>(function Link(
   { href, prefetch: _prefetch, ...rest },
   ref,
 ) {
-  return <RRLink ref={ref} to={href} {...(rest as AnyProps)} />;
+  // Choke point de segurança: o react-router renderiza <a href="javascript:..."> para hrefs
+  // absolutos (ABSOLUTE_URL_REGEX casa "javascript:"), então TODO href dinâmico passa por
+  // safeHref aqui — bloqueia javascript:/data: e protocol-relative de uma só vez.
+  return <RRLink ref={ref} to={safeHref(href)} {...(rest as AnyProps)} />;
 });
 
 export function Image({ src, alt, ...rest }: { src?: unknown; alt?: string } & AnyProps) {
