@@ -123,6 +123,26 @@ export function AboutDialog({ open, onClose }: { open: boolean; onClose: () => v
             </div>
           </section>
 
+          {/* Equipe e responsáveis */}
+          <section className="rounded-2xl border border-border/70 bg-bg-subtle/50 p-4">
+            <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">Equipe e responsáveis</h3>
+            <div className="space-y-2">
+              <InfoRow label="Equipe">Equipe de Dados, sob gestão da Diretoria de Tecnologia</InfoRow>
+              <InfoRow label="Diretor de Tecnologia">
+                Danilo Deus Dará ·{" "}
+                <a className="text-brand-600 underline hover:text-brand-700" href="mailto:danilo.deus@turn2c.com">
+                  danilo.deus@turn2c.com
+                </a>
+              </InfoRow>
+              <InfoRow label="Suporte à aplicação">
+                Daniel Teixeira ·{" "}
+                <a className="text-brand-600 underline hover:text-brand-700" href="mailto:daniel.teixeira@turn2c.com">
+                  daniel.teixeira@turn2c.com
+                </a>
+              </InfoRow>
+            </div>
+          </section>
+
           {/* Módulos principais */}
           <section>
             <h3 className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-brand-600">Módulos principais</h3>
