@@ -8,6 +8,9 @@ on:
     branches: [main, develop, apice]   # main→prd, develop→dev, apice→apc
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 env:
   BRANCH: ${{ github.ref_name }}
 
