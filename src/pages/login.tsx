@@ -6,9 +6,12 @@ import { Banner } from "@/components/ui/banner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { defaultRouteForRoles } from "@/config/rbac";
 import { useAuth } from "@/lib/auth";
 
 type LoginStep = "credentials" | "mfa";
+
+type LoginOutcome = { roles?: string[]; permissions?: string[] };
 
 export function LoginPage() {
   const auth = useAuth();
@@ -43,11 +46,15 @@ export function LoginPage() {
       ? "Se sua conta estiver protegida por segundo fator, confirme o código temporário agora."
       : "Use suas credenciais corporativas para acessar catálogo, Data Quality, incidentes, integrações e painéis operacionais.";
 
-  function finishLogin() {
+  function finishLogin(result: LoginOutcome) {
     setPassword("");
     setMfaCode("");
     const from = (location.state as { from?: string } | null)?.from;
-    navigate(from && from !== "/login" ? from : auth.defaultRoute, { replace: true });
+    // Rota calculada a partir do RESULTADO do login (o estado do provider ainda não
+    // atualizou neste tick, então auth.defaultRoute estaria obsoleto = /login).
+    const resolved = defaultRouteForRoles(result.roles ?? [], result.permissions ?? []);
+    const target = from && from !== "/login" ? from : resolved === "/login" ? "/" : resolved;
+    navigate(target, { replace: true });
   }
 
   async function handleCredentialsSubmit(event: FormEvent<HTMLFormElement>) {
@@ -55,8 +62,8 @@ export function LoginPage() {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      await auth.login(email, password);
-      finishLogin();
+      const result = await auth.login(email, password);
+      finishLogin(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Falha ao processar o login.";
       // Conta com MFA ativo → avança para a etapa do código (sem tratar como erro).
@@ -82,8 +89,8 @@ export function LoginPage() {
     setIsLoading(true);
     setErrorMessage("");
     try {
-      await auth.login(email, password, code);
-      finishLogin();
+      const result = await auth.login(email, password, code);
+      finishLogin(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Não foi possível concluir o login. Tente novamente.";
       setErrorMessage(
